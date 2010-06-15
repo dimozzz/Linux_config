@@ -1,0 +1,53 @@
+set folder=/home/dimozzz/Mail
+set spoolfile='/home/dimozzz/Mail/inbox'
+# set mbox=/home/dimozzz/Mail/inbox
+# set mbox_type="mbox"
+
+# mailboxes = inbox
+
+mailboxes 'echo /home/dimozzz/Mail/*'
+
+set pager_context=1
+set pager_index_lines=6                 #показывать оглавления в окне программы
+set menu_scroll
+set pgp_verify_sig=no                   #не показывать pgp на странице
+set status_on_top                       #разместить статусную строку вверху
+set sort=threads                     
+
+set status_format=" %r %b %f %n      Del %d      Msgs %m %l %> (%P)"
+set pager_format="%-10.10i %[!%a %b %d %R]"
+set date_format="!%H:%M %a %d %b     "
+set index_format="%4C %Z %[%b%d] %-15.15F %s"
+set folder_format="%2C %t %8s %d %N %f"
+
+set record="$HOME/Mail/sent"        #сохранять отправленную почту здесь
+set include=yes				#выделять сообщение в ответе
+set fast_reply=yes			#не подтверждать ответ
+set beep=no				#не пищать
+
+set editor="medit"                # редактор писем
+
+
+# симулировать старое url меню
+macro index \cb |urlview\n 'call urlview to extract URLs out of a message'
+macro pager \cb |urlview\n 'call urlview to extract URLs out of a message'
+
+#запуск fetchmail нажатием кнопки G
+macro index G "!fetchmail -a -m 'procmail -d %T'\r"
+macro pager G "!fetchmail -a -m 'procmail -d %T'\r"
+
+#редактирование .muttrc... не требует перезапуска
+
+macro generic ,sm ":source $HOME/.muttrc\r"
+macro generic \cj "!rxvt -bg wheat -e joe $HOME/.muttrc\r"
+
+
+##ваш Mutt должен поддерживать несколько цветов
+##для обозначения четырех уровней выделенного текста
+##данные настройки отменяют параметры общей конфигурации в /etc/mutt/Muttrc
+
+#color quoted green  default
+color quoted1 magenta blue
+#color quoted2 yellow default
+#color quoted3 red default
+#color signature cyan cyan
