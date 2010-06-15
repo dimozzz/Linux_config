@@ -10,5 +10,6 @@
 # exec startxfce4
 # ...or the Window Manager of your choice
 
+
 xmobar ~/.xmobar/xmobarUp &
 xmonad | xmobar ~/.xmobar/xmobarDown

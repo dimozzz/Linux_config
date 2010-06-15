@@ -1,4 +1,4 @@
-import XMonad
+import XMonad hiding ( (|||) )
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import Data.Ratio ((%))
@@ -22,12 +22,14 @@ import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.PerWorkspace
+import XMonad.Layout.LayoutCombinators
  
 import XMonad.Prompt
 import XMonad.Prompt.Input
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Window
- 
+import System.IO.UTF8
+
 import XMonad.Util.Scratchpad 
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
@@ -96,6 +98,12 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((controlMask .|. shiftMask, xK_Left), spawn "amixer sset Master 2-")
     , ((controlMask .|. shiftMask, xK_Right), spawn "amixer sset Master 2+")
 
+	-- Seek control
+    , ((mod1Mask, xK_Left), spawn "mpc seek -5")
+	, ((mod1Mask, xK_Right), spawn "mpc seek +5")
+
+
+
     ]
  
 
@@ -108,7 +116,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)] ]
  
 
-myNamedWorkSpaces = ["Web","Pidgin! (Achtung)","Mail","Video","PcmanFm"]
+myNamedWorkSpaces = ["Web","Pidgin! (Achtung)","Mail","Idea","Arena"]
 myWorkspaces = map show [1..4] ++ myNamedWorkSpaces
  
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
@@ -184,23 +192,27 @@ myLayoutDefault = avoidStruts $ smartBorders $ toggleLayouts (noBorders Full)
         delta   = 2/100
         ratio   = 1/2
 
-myLIm = avoidStruts (withIM (1%4) (ClassName "Pidgin") Grid)
+myLIm = avoidStruts (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") (Grid ||| Full))
+--avoidStruts (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") Grid)
 
 myLayout = onWorkspace "Pidgin! (Achtung)" myLIm $
            myLayoutDefault
 
 
 
-
 -- special windows
 myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
-    , className =? "Shiretoko"      --> doF (W.shift "Web")
-    , className =? "Pidgin"         --> doF (W.shift "Pidgin! (Achtung)")
-    , className =? "Claws-mail"     --> doF (W.shift "Mail" )
-    , isFullscreen                  --> doFullFloat
+    [ className =? "MPlayer"                --> doFloat
+    , className =? "Namoroka"              --> doF (W.shift "Web")
+    , className =? "Pidgin"                 --> doF (W.shift "Pidgin! (Achtung)")
+    , className =? "Claws-mail"             --> doF (W.shift "Mail")
+    , className =? "java-lang-Thread"       --> doF (W.shift "Idea")
+    , className =? "com-sun-javaws-Main" --> doF (W.shift "Arena")
+    , isFullscreen                          --> doFullFloat
     , manageDocks
-    ] <+> manageHook defaultConfig 
+    --, scratchpadManageHook scratchpad
+    ] <+> scratchpadManageHook (W.RationalRect 0 0 1 0.3)
+      <+> manageHook defaultConfig 
 
 myLogHook = dynamicLogWithPP xmobarPP
 
@@ -208,14 +220,16 @@ myStartupHook :: X ()
 myStartupHook = do
     setWMName "LG3D"
     spawn "xxkb"
-    spawn "feh --bg-scale ~/pictures1/10fingers.gif &"
-    --spawn "tilda -h &"
+    spawn "feh --bg-scale ~/pictures1/oboi.jpg &"
+    spawn "claws-mail &"
+    spawn "pidgin &"
+    spawn "firefox &"
     refresh
 
 main = do
 
     xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig {
-	terminal           = "xterm"
+	terminal           = "urxvt -tr -tint black -sh 20"
         , borderWidth        = 2
         , normalBorderColor  = "black"
         , focusedBorderColor = "orange"
@@ -225,9 +239,9 @@ main = do
         , mouseBindings      = myMouseBindings
         , layoutHook         = myLayout
         , handleEventHook    = ewmhDesktopsEventHook
-	, workspaces         = myWorkspaces
+		, workspaces         = myWorkspaces
         , manageHook         = myManageHook
-	, startupHook        = myStartupHook
-	, logHook            = myLogHook
+		, startupHook        = myStartupHook
+		, logHook            = myLogHook
 
     }
