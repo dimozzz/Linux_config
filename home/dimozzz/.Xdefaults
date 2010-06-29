@@ -1,0 +1,6 @@
+URxvt.font: xft:Monospace:style=Regular:size=11
+URxvt.boldFont: xft:Monospace:style=Regular:size=11
+URxvt*foreground: Green
+URxvt*background: Black
+URxvt*sсrollBar_right: True
+URxvt*saveLines: 512
