@@ -24,6 +24,10 @@ set nowritebackup
 inoremap <C-space> <C-x><C-o>
 imap <c-s> <c-o><c-s><CR>
 
+nmap <F2> :w<CR>
+imap <F2> <Esc><F2>i
+vmap <F2> <Esc><F2>v
+
   map ё `
   map й q
   map ц w
