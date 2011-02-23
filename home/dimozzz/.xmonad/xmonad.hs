@@ -35,29 +35,21 @@ import XMonad.Util.Scratchpad
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
     -- terminals
-    [ ((controlMask, xK_Home), spawn $ XMonad.terminal conf)
-    -- quake terminal
-    , ((modMask,                 xK_Down  ), scratchpadSpawnAction conf)
-    -- file manager
-    , ((modMask,                 xK_Up    ), spawn "pcmanfm ~")
- 
+    [ ((modMask, xK_Home), spawn $ XMonad.terminal conf)
+    , ((modMask, xK_Down), scratchpadSpawnAction conf)
  
     -- shell/window prompts
-    , ((modMask,                 xK_space), shellPrompt mySP)
+    , ((modMask, xK_space), shellPrompt mySP)
     , ((modMask .|. controlMask, xK_space), windowPromptGoto mySP)
  
-    -- browser
-    , ((modMask,               xK_b     ), spawn "firefox")
- 
- 
-    -- print screen
-    , ((0,                     xK_Print ), spawn "scrot -e 'mv $f ~'")
+    , ((modMask, xK_b), spawn "firefox")
+    , ((0, xK_Print), spawn "scrot -e 'mv $f ~'")
  
     -- cycle through workspaces
-    , ((mod1Mask .|. controlMask, xK_Right ), moveTo Next (WSIs (return $ not . (=="SP") . W.tag)))
-    , ((mod1Mask .|. controlMask, xK_Left),   moveTo Prev (WSIs (return $ not . (=="SP") . W.tag)))
-    , ((mod1Mask .|. controlMask, xK_Up),     moveTo Next EmptyWS)
-    , ((mod1Mask .|. controlMask, xK_Down),   moveTo Prev EmptyWS)
+    , ((modMask .|. controlMask, xK_Right ), moveTo Next (WSIs (return $ not . (=="SP") . W.tag)))
+    , ((modMask .|. controlMask, xK_Left),   moveTo Prev (WSIs (return $ not . (=="SP") . W.tag)))
+    , ((modMask .|. controlMask, xK_Up),     moveTo Next EmptyWS)
+    , ((modMask .|. controlMask, xK_Down),   moveTo Prev EmptyWS)
      
     -- move windows through workspaces
     , ((modMask .|. shiftMask, xK_Right ), shiftTo Next (WSIs (return $ not . (=="SP") . W.tag)))
@@ -65,44 +57,41 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
  
     -- Move focus to the next/previous window
-    , ((mod1Mask,               xK_Tab   ), windows W.focusDown)
-    , ((mod1Mask .|. shiftMask, xK_Tab  ), windows W.focusUp)
+    , ((mod1Mask, xK_Tab), windows W.focusDown)
+    , ((mod1Mask .|. shiftMask, xK_Tab), windows W.focusUp)
  
  
     -- Shrink/Expand the master area
-    , ((modMask,               xK_x     ), sendMessage Shrink)
-    , ((modMask,               xK_z     ), sendMessage Expand)
+    , ((modMask, xK_x), sendMessage Shrink)
+    , ((modMask, xK_z), sendMessage Expand)
     -- Swap the focused window and the master window
-    , ((modMask,               xK_a), windows W.swapMaster)
+    , ((modMask, xK_a), windows W.swapMaster)
  
  
     -- Resize viewed windows to the correct size
-    , ((modMask,               xK_n     ), refresh)
+    , ((modMask, xK_n), refresh)
     -- Reset layout of current workspace
-    , ((modMask .|. shiftMask, xK_n     ), setLayout $ XMonad.layoutHook conf)
+    , ((modMask .|. shiftMask, xK_n), setLayout $ XMonad.layoutHook conf)
     
     -- Push window back into tiling
-    , ((modMask,               xK_s     ), withFocused $ windows . W.sink)
+    , ((modMask, xK_s), withFocused $ windows . W.sink)
  
  
     -- toggle focused window fullscreen
-    , ((modMask,               xK_m     ), sendMessage (Toggle "Full"))
+    , ((modMask, xK_m), sendMessage (Toggle "Full"))
  
     -- toggle the status bar gap
-    , ((modMask,               xK_f     ), sendMessage ToggleStruts)
+    , ((modMask, xK_f), sendMessage ToggleStruts)
  
     -- close focused window
-    , ((mod1Mask              , xK_F4     ), kill)
+    , ((mod1Mask, xK_F4), kill)
 	
     -- Volume control
     , ((controlMask .|. shiftMask, xK_Left), spawn "amixer sset Master 2-")
     , ((controlMask .|. shiftMask, xK_Right), spawn "amixer sset Master 2+")
-
-	-- Seek control
-    , ((mod1Mask, xK_Left), spawn "mpc seek -5")
-	, ((mod1Mask, xK_Right), spawn "mpc seek +5")
-
-
+    , ((controlMask .|. shiftMask, xK_Up), spawn "mpc seek +5")
+    , ((controlMask .|. shiftMask, xK_Down), spawn "mpc seek -5")
+    , ((controlMask .|. shiftMask, xK_space), spawn "mpc toggle")
 
     ]
  
