@@ -192,7 +192,7 @@ myLayout = onWorkspace "Pidgin! (Achtung)" myLIm $
 -- special windows
 myManageHook = composeAll
     [ className =? "MPlayer"                --> doFloat
-    , className =? "Namoroka"              --> doF (W.shift "Web")
+    , className =? "Firefox"              --> doF (W.shift "Web")
     , className =? "Pidgin"                 --> doF (W.shift "Pidgin! (Achtung)")
     , className =? "Claws-mail"             --> doF (W.shift "Mail")
     , className =? "java-lang-Thread"       --> doF (W.shift "Idea")
@@ -208,8 +208,8 @@ myLogHook = dynamicLogWithPP xmobarPP
 myStartupHook :: X ()
 myStartupHook = do
     setWMName "LG3D"
-    spawn "xxkb"
     spawn "feh --bg-scale ~/pictures1/oboi.jpg &"
+    spawn "emacs --daemon &"
     spawn "claws-mail &"
     spawn "pidgin &"
     spawn "firefox &"
