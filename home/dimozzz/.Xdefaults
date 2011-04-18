@@ -4,3 +4,5 @@ URxvt*foreground: Green
 URxvt*background: Black
 URxvt*sсrollBar_right: True
 URxvt*saveLines: 512
+
+Emacs*useXIM:false
