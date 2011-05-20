@@ -21,8 +21,10 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.IM
 import XMonad.Layout.Grid
+import XMonad.Layout.Circle
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.LayoutCombinators
+import XMonad.Layout.NoBorders
  
 import XMonad.Prompt
 import XMonad.Prompt.Input
@@ -79,6 +81,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
     -- toggle focused window fullscreen
     , ((modMask, xK_m), sendMessage (Toggle "Full"))
+	, ((modMask, xK_c), sendMessage (Toggle "Circle"))
  
     -- toggle the status bar gap
     , ((modMask, xK_f), sendMessage ToggleStruts)
@@ -173,18 +176,18 @@ myPP = defaultPP
  
  
 -- layouts
-myLayoutDefault = avoidStruts $ smartBorders $ toggleLayouts (noBorders Full)
-    (smartBorders (tiled ||| Mirror tiled ||| layoutHints (tabbed shrinkText myTab)))
+myLayoutDefault = smartBorders $ toggleLayouts Full tiled
     where
         tiled   = layoutHints $ ResizableTall nmaster delta ratio []
         nmaster = 1
         delta   = 2/100
         ratio   = 1/2
 
-myLIm = avoidStruts (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") (Grid ||| Full))
+
+myLIm = (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") (toggleLayouts Circle Grid))
 --avoidStruts (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") Grid)
 
-myLayout = onWorkspace "Pidgin! (Achtung)" myLIm $
+myLayout = avoidStruts $ onWorkspace "Pidgin! (Achtung)" myLIm $
            myLayoutDefault
 
 
@@ -192,11 +195,11 @@ myLayout = onWorkspace "Pidgin! (Achtung)" myLIm $
 -- special windows
 myManageHook = composeAll
     [ className =? "MPlayer"                --> doFloat
-    , className =? "Firefox"              --> doF (W.shift "Web")
+    , className =? "Firefox"                --> doF (W.shift "Web")
     , className =? "Pidgin"                 --> doF (W.shift "Pidgin! (Achtung)")
     , className =? "Claws-mail"             --> doF (W.shift "Mail")
     , className =? "java-lang-Thread"       --> doF (W.shift "Idea")
-    , className =? "com-sun-javaws-Main" --> doF (W.shift "Arena")
+    , className =? "com-sun-javaws-Main"    --> doF (W.shift "Arena")
     , isFullscreen                          --> doFullFloat
     , manageDocks
     --, scratchpadManageHook scratchpad
@@ -218,7 +221,7 @@ myStartupHook = do
 main = do
 
     xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig {
-	terminal           = "urxvt -tr -tint black -sh 20"
+		terminal           = "urxvt -sh 15 -b 0"
         , borderWidth        = 2
         , normalBorderColor  = "black"
         , focusedBorderColor = "orange"
