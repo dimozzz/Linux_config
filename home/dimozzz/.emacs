@@ -18,6 +18,7 @@
 (setq c-basic-indent 4)
 
 (global-set-key (kbd "RET") 'newline-and-indent)
+(global-linum-mode t)
 
 
 (setq make-backup-files nil)
@@ -34,3 +35,4 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  )
+(put 'upcase-region 'disabled nil)
