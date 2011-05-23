@@ -1,7 +1,18 @@
+#URxvt*perl-ext: tabbed
+URxvt.tabbed.tab-bg: 4
+
 URxvt.font: xft:Monospace:style=Regular:size=11
 URxvt.boldFont: xft:Monospace:style=Regular:size=11
-URxvt*foreground: Green
+#URxvt.font: xft:Terminus:style=Regular:size=14
+#URxvt.boldFont: xft:Terminus:style=Regular:size=14
+
+URxvt*foreground: #C0C0C0
 URxvt*background: Black
+
+URxvt*transparent: true
+
+URxvt*urgentOnBell: true
+
 URxvt*sсrollBar_right: True
 URxvt*saveLines: 512
 
