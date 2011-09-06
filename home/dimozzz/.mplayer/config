@@ -1,0 +1,9 @@
+stop-xscreensaver = "yes"
+ass = "yes"
+subcp = "enca:ru:cp1251"
+font = "/usr/share/fonts/truetype/ttf-dejavu/"
+subfont-text-scale = "5"
+subfont-blur = "8"
+subfont-outline = "8"
+double=no
+

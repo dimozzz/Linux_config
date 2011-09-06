@@ -3,9 +3,10 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , fgColor = "grey"
        , position = Bottom
        , lowerOnStart = True
-       , commands = [ Run StdinReader
+	   , commands = [  Run StdinReader
+					, Run Com "/bin/sh" ["~/.myScripts/check_mail.sh"] "check_mail" 1200
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader%"
+       , template = "%StdinReader%}{Unread mail: %check_mail%  "
        }
