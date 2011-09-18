@@ -1,53 +1,58 @@
-set folder=/home/dimozzz/Mail
-set spoolfile='/home/dimozzz/Mail/inbox'
-# set mbox=/home/dimozzz/Mail/inbox
-# set mbox_type="mbox"
+#set imap_user = ''
+#set imap_pass = ''
 
-# mailboxes = inbox
+set spoolfile = "imaps://imap.gmail.com:993/INBOX"
+set folder = "imaps://imap.gmail.com:993"
+set include = yes
 
-mailboxes 'echo /home/dimozzz/Mail/*'
+set editor="emacs"
+set sendmail="/usr/bin/msmtp"
 
-set pager_context=1
-set pager_index_lines=6                 #показывать оглавления в окне программы
-set menu_scroll
-set pgp_verify_sig=no                   #не показывать pgp на странице
-set status_on_top                       #разместить статусную строку вверху
-set sort=threads                     
-
-set status_format=" %r %b %f %n      Del %d      Msgs %m %l %> (%P)"
+set status_format=" %r %b %f %n Del %d Msgs %m %l %> (%P)"
 set pager_format="%-10.10i %[!%a %b %d %R]"
-set date_format="!%H:%M %a %d %b     "
+set date_format="!%H:%M %a %d %b "
 set index_format="%4C %Z %[%b%d] %-15.15F %s"
 set folder_format="%2C %t %8s %d %N %f"
 
-set record="$HOME/Mail/sent"        #сохранять отправленную почту здесь
-set include=yes				#выделять сообщение в ответе
-set fast_reply=yes			#не подтверждать ответ
+set header_cache =~/.mutt/cache/headers
+set message_cachedir =~/.mutt/cache/bodies
+set certificate_file =~/.mutt/certificates
+
+set sort=threads
+set sort_aux=last-date-received
+
+macro index \cu |urlview\n
+macro pager \cu |urlview\n
+
 set beep=no				#не пищать
 
-set editor="medit"                # редактор писем
+set alias_file=~/.mutt/aliases
+source ~/.mutt/aliases
+set query_command= "abook --mutt-query '%s'"
+bind editor <Tab> complete-query
+macro index,pager A " abook --add-email-quiet" "add the sender address to abook"
+
+#auto_view text/html
 
 
-# симулировать старое url меню
-macro index \cb |urlview\n 'call urlview to extract URLs out of a message'
-macro pager \cb |urlview\n 'call urlview to extract URLs out of a message'
+color hdrdefault red           default
+color quoted     brightblue    default
+color signature  red           default
+color indicator  brightyellow  red
+color error      brightred     default
+color status     yellow        blue
+color tree       magenta       default
+color tilde      magenta       default
+color message    brightcyan    default
+color markers    brightcyan    default
+color attachment brightmagenta default
+color search     default       green
 
-#запуск fetchmail нажатием кнопки G
-macro index G "!fetchmail -a -m 'procmail -d %T'\r"
-macro pager G "!fetchmail -a -m 'procmail -d %T'\r"
+color header     brightred     default ^(From|To|Cc|Reply-To|Subject):
+color body       magenta       default "(ftp|https?)://[^ ]+"
+color body       magenta       default [-a-z_0-9.+]+@[-a-z_0-9.]+
+color underline  brightgreen   default
 
-#редактирование .muttrc... не требует перезапуска
-
-macro generic ,sm ":source $HOME/.muttrc\r"
-macro generic \cj "!rxvt -bg wheat -e joe $HOME/.muttrc\r"
-
-
-##ваш Mutt должен поддерживать несколько цветов
-##для обозначения четырех уровней выделенного текста
-##данные настройки отменяют параметры общей конфигурации в /etc/mutt/Muttrc
-
-#color quoted green  default
-color quoted1 magenta blue
-#color quoted2 yellow default
-#color quoted3 red default
-#color signature cyan cyan
+# attributes when using a mono terminal
+mono  header     underline ^(From|To|Cc|Reply-To|Subject):
+mono  quoted     bold

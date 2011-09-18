@@ -44,7 +44,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask, xK_space), shellPrompt mySP)
     , ((modMask .|. controlMask, xK_space), windowPromptGoto mySP)
  
-    , ((modMask, xK_b), spawn "firefox")
+    , ((modMask, xK_b), spawn "conkeror")
     , ((0, xK_Print), spawn "scrot -e 'mv $f ~'")
  
     -- cycle through workspaces
@@ -108,7 +108,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)] ]
  
 
-myNamedWorkSpaces = ["Web","Pidgin! (Achtung)","Mail","Idea","Arena"]
+myNamedWorkSpaces = ["Web","Pidgin! (Achtung)","Music","Idea","Arena"]
 myWorkspaces = map show [1..4] ++ myNamedWorkSpaces
  
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
@@ -195,9 +195,8 @@ myLayout = avoidStruts $ onWorkspace "Pidgin! (Achtung)" myLIm $
 -- special windows
 myManageHook = composeAll
     [ className =? "MPlayer"                --> doFloat
-    , className =? "Firefox"                --> doF (W.shift "Web")
+    , className =? "Conkeror"                --> doF (W.shift "Web")
     , className =? "Pidgin"                 --> doF (W.shift "Pidgin! (Achtung)")
-    , className =? "Claws-mail"             --> doF (W.shift "Mail")
     , className =? "java-lang-Thread"       --> doF (W.shift "Idea")
     , className =? "com-sun-javaws-Main"    --> doF (W.shift "Arena")
     , isFullscreen                          --> doFullFloat
@@ -211,11 +210,11 @@ myLogHook = dynamicLogWithPP xmobarPP
 myStartupHook :: X ()
 myStartupHook = do
     setWMName "LG3D"
-    spawn "feh --bg-scale ~/pictures1/oboi.jpg &"
+    spawn "feh --bg-scale ~/trash/pics/oboi.jpg &"
     spawn "emacs --daemon &"
-    spawn "claws-mail &"
+    --spawn "claws-mail &"
     spawn "pidgin &"
-    spawn "firefox &"
+    spawn "conkeror &"
     refresh
 
 main = do

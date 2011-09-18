@@ -1,4 +1,4 @@
-KERNEL!="sd[b-z]*", GOTO="media_by_label_auto_mount_end"
+KERNEL!="sd[d-z]*", GOTO="media_by_label_auto_mount_end"
 ACTION=="add", PROGRAM!="/sbin/blkid %N", GOTO="media_by_label_auto_mount_end"
 
 # Open luks partition if necessary
