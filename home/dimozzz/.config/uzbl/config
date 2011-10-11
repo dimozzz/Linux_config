@@ -49,6 +49,7 @@ set download_handler    = spawn @scripts_dir/lich-download.sh
 
 
 @on_event   NEW_WINDOW     event NEW_TAB %s
+@on_event   REQ_NEW_WINDOW event NEW_TAB %s
 
 # Load start handler
 @on_event   LOAD_START     @set_status <span foreground="khaki">wait</span>
@@ -79,7 +80,7 @@ set download_handler    = spawn @scripts_dir/lich-download.sh
 #@on_event  CONFIG_CHANGED print Config changed: %1 = %2
 
 # Scroll percentage calculation
-@on_event   SCROLL_VERT    set scroll_message = \@<(function(curr, min, max, size){if(max == size) return '--'; var p=(curr/(max - size)); return Math.round(10000*p)/100;})(%1,%2,%3,%4)>\@%
+@on_event   SCOLL_VERT    set scroll_message = \@<(function(curr, min, max, size){if(max == size) return '--'; var p=(curr/(max - size)); return Math.round(10000*p)/100;})(%1,%2,%3,%4)>\@%
 
 # === Behaviour and appearance ===============================================
 
@@ -123,15 +124,9 @@ set progress.pending    =
 
 # === Useragent setup ========================================================
 
-set useragent         = Uzbl (Webkit @{WEBKIT_MAJOR}.@{WEBKIT_MINOR}) (@(+uname -sm)@ [@ARCH_UZBL])
+#set useragent         = Uzbl (Webkit @{WEBKIT_MAJOR}.@{WEBKIT_MINOR}) (@(+uname -sm)@ [@ARCH_UZBL])
+set useragent         = Safari/535.1
 
-# === Configure cookie blacklist ========================================================
-
-# Accept 'session cookies' from uzbl.org (when you have a whitelist all other cookies are dropped)
-#request WHITELIST_COOKIE domain 'uzbl.org$' expires '^$'
-
-# Drop google analytics tracking cookies (applied after whitelists if any)
-#request BLACKLIST_COOKIE name '^__utm.$'
 
 # === Key binding configuration ==============================================
 # --- Internal modmapping and ignoring ---------------------------------------
@@ -189,14 +184,10 @@ set ebind     = @mode_bind global,-insert
 @ebind  <Ctrl>a      = event SET_CURSOR_POS 0
 @ebind  <Ctrl>e      = event SET_CURSOR_POS -1
 
-@ebind <Up>          = event HISTORY_PREV
-@ebind <Down>        = event HISTORY_NEXT
+@ebind <Ctrl><Up>    = event HISTORY_PREV
+@ebind <Ctrl><Down>  = event HISTORY_NEXT
 @ebind <Ctrl>r<search:>_ = event HISTORY_SEARCH %s
-# Keycmd injection/append examples.
-#@ebind  <Ctrl>su = event INJECT_KEYCMD \@uri
-#@ebind  <Ctrl>st = event INJECT_KEYCMD \@title
-#@ebind  <Ctrl>du = event APPEND_KEYCMD \@uri
-#@ebind  <Ctrl>dt = event APPEND_KEYCMD \@title
+
 
 # --- Mouse bindings ---------------------------------------------------------
 
@@ -209,18 +200,13 @@ set ebind     = @mode_bind global,-insert
 # a colon.
 @cbind    :_        = %s
 
-# open a new window or a new tab (see the on_event NEW_WINDOW settings above)
-@cbind  w            = event REQ_NEW_WINDOW
-
 # Page movement binds
-@cbind  j            = scroll vertical 20
-@cbind  k            = scroll vertical -20
+@cbind  <Down>       = scroll vertical 20
+@cbind  <Up>         = scroll vertical -20
 @cbind  h            = scroll horizontal -20
 @cbind  l            = scroll horizontal 20
 @cbind  <Page_Up>    = scroll vertical -100%
 @cbind  <Page_Down>  = scroll vertical 100%
-@cbind  <Ctrl>f      = scroll vertical 100%
-@cbind  <Ctrl>b      = scroll vertical -100%
 @cbind  <<           = scroll vertical begin
 @cbind  >>           = scroll vertical end
 @cbind  <Home>       = scroll vertical begin
@@ -240,14 +226,12 @@ set ebind     = @mode_bind global,-insert
 @cbind  +   = zoom_in
 @cbind  -   = zoom_out
 @cbind  T   = toggle_zoom_type
-@cbind  1   = set zoom_level = 1.0
-@cbind  2   = set zoom_level = 2.0
 
 # Appearance binds
-@cbind  t   = toggle_status
+@cbind  <Ctrl>f   = toggle_status
 
 # Page searching binds
-@cbind  /*  = search %s
+@cbind  <Ctrl>s  = search %s
 @cbind  ?*  = search_reverse %s
 # Jump to next and previous items
 @cbind  n   = search
@@ -258,7 +242,6 @@ set ebind     = @mode_bind global,-insert
 
 # Web searching binds
 @cbind  gg<Google:>_         = uri http://www.google.com/search?q=\@<encodeURIComponent(%r)>\@
-@cbind  ddg<DuckDuckGo:>_    = uri http://duckduckgo.com/?q=%s
 @cbind  \\awiki<Archwiki:>_  = uri http://wiki.archlinux.org/index.php/Special:Search?search=\@<encodeURIComponent(%r)>\@&go=Go
 @cbind  \\wiki<Wikipedia:>_  = uri http://en.wikipedia.org/w/index.php?title=Special:Search&search=\@<encodeURIComponent(%r)>\@&go=Go
 
@@ -277,7 +260,9 @@ set ebind     = @mode_bind global,-insert
 @cbind  <Ctrl><Mod1>t  = sh 'urxvt -e socat unix-connect:"$UZBL_SOCKET" -'
 
 # Uri opening prompts
-@cbind  o<uri:>_       = uri %s
+#@cbind  o<uri:>_       = uri %s
+@cbind  o       = spawn @scripts_dir/load_url_from_history.sh
+@cbind  t       = spawn @scripts_dir/load_url_from_history_tab.sh \@(12)\@
 # Or have it load the current uri into the keycmd for editing
 @cbind  O<uri:\@uri>_  = uri %s
 
@@ -304,19 +289,12 @@ set ebind     = @mode_bind global,-insert
 @cbind  c   = event REQ_NEW_WINDOW \@uri
 # Go the page from primary selection
 @cbind  p   = sh 'echo "uri $(xclip -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"'
-# Go to the page in clipboard
-@cbind  P   = sh 'echo "uri $(xclip -selection clipboard -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"'
-# paste primary selection into keycmd at the cursor position
-@bind <Shift><Insert> = sh 'echo "event INJECT_KEYCMD $(xclip -o | sed s/\\\@/%40/g)" > "$UZBL_FIFO"'
 
 # Bookmark inserting binds
 @cbind <Ctrl>m<tags:>_  = sh 'echo "$UZBL_URI $1" >> "$XDG_DATA_HOME"/uzbl/bookmarks' '%s'
 # Or use a script to insert a bookmark.
 @cbind  M  = spawn @scripts_dir/insert_bookmark.sh
 
-# Bookmark/history loading
-@cbind  U  = spawn @scripts_dir/load_url_from_history.sh
-@cbind  u  = spawn @scripts_dir/load_url_from_bookmarks.sh
 
 # Temporary bookmarks
 @cbind  <Ctrl>d  = spawn @scripts_dir/insert_temp.sh
@@ -351,20 +329,30 @@ set formfiller = spawn @scripts_dir/formfiller.sh
 
 # Tab opening
 @cbind  gn              = event NEW_TAB
-@cbind  gN              = event NEW_TAB_NEXT
-@cbind  go<uri:>_       = event NEW_TAB %s
-@cbind  gO<uri:>_       = event NEW_TAB_NEXT %s
+@cbind  t<uri:>_       = event NEW_TAB %s
+
 
 # Closing / resting
-@cbind  gC              = exit
+@cbind  gc              = exit
 @cbind  gQ              = event CLEAN_TABS
 
 # Tab navigating
 @cbind  g<              = event FIRST_TAB
 @cbind  g>              = event LAST_TAB
-@cbind  gt              = event NEXT_TAB
-@cbind  gT              = event PREV_TAB
+@cbind  <Ctrl><Right>   = event NEXT_TAB
+@cbind  <Ctrl><Left>    = event PREV_TAB
 @cbind  gi<index:>_     = event GOTO_TAB %s
+@cbind  0               = event GOTO_TAB 0
+@cbind  1               = event GOTO_TAB 1
+@cbind  2               = event GOTO_TAB 2
+@cbind  3               = event GOTO_TAB 3
+@cbind  4               = event GOTO_TAB 4
+@cbind  5               = event GOTO_TAB 5
+@cbind  6               = event GOTO_TAB 6
+@cbind  7               = event GOTO_TAB 7
+@cbind  8               = event GOTO_TAB 8
+@cbind  9               = event GOTO_TAB 9
+
 
 # Preset loading
 set preset = event PRESET_TABS

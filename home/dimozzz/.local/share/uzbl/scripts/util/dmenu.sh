@@ -54,6 +54,7 @@ if [ -z "$DMENU_ARGS" ]; then
 fi
 
 # Set the font if wanted
+DMENU_FONT="-*-clean-*-*-*-*-*-*-*-*-*-*-iso10646-*"
 if [ -n "$DMENU_FONT" ]; then
     DMENU_ARGS="$DMENU_ARGS -fn $DMENU_FONT"
 fi
@@ -113,4 +114,4 @@ if dmenu --help 2>&1 | grep -q '\[-x <\?xoffset>\?\]'; then
     DMENU_HAS_PLACEMENT=1
 fi
 
-DMENU="dmenu $DMENU_ARGS $DMENU_COLORS"
+DMENU="dmenu -b $DMENU_ARGS $DMENU_COLORS"
