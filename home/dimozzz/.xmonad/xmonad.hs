@@ -44,7 +44,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask, xK_space), shellPrompt mySP)
     , ((modMask .|. controlMask, xK_space), windowPromptGoto mySP)
  
-    , ((modMask, xK_b), spawn "conkeror")
+    , ((modMask, xK_b), spawn "uzbl-tabbed")
     , ((0, xK_Print), spawn "scrot -e 'mv $f ~'")
  
     -- cycle through workspaces
@@ -195,7 +195,7 @@ myLayout = avoidStruts $ onWorkspace "Pidgin! (Achtung)" myLIm $
 -- special windows
 myManageHook = composeAll
     [ className =? "MPlayer"                --> doFloat
-    , className =? "Conkeror"                --> doF (W.shift "Web")
+    , className =? "Uzbl-tabbed"            --> doF (W.shift "Web")
     , className =? "Pidgin"                 --> doF (W.shift "Pidgin! (Achtung)")
     , className =? "java-lang-Thread"       --> doF (W.shift "Idea")
     , className =? "com-sun-javaws-Main"    --> doF (W.shift "Arena")
@@ -210,11 +210,11 @@ myLogHook = dynamicLogWithPP xmobarPP
 myStartupHook :: X ()
 myStartupHook = do
     setWMName "LG3D"
-    spawn "feh --bg-scale ~/trash/pics/oboi.jpg &"
+    spawn "feh --bg-scale ~/trash/pics/wallpaper/Bliss.jpg &"
     spawn "emacs --daemon &"
     --spawn "claws-mail &"
     spawn "pidgin &"
-    spawn "conkeror &"
+    spawn "uzbl-tabbed &"
     refresh
 
 main = do
