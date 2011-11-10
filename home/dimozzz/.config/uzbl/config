@@ -125,7 +125,7 @@ set progress.pending    =
 # === Useragent setup ========================================================
 
 #set useragent         = Uzbl (Webkit @{WEBKIT_MAJOR}.@{WEBKIT_MINOR}) (@(+uname -sm)@ [@ARCH_UZBL])
-set useragent         = Safari/535.1
+set useragent = Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.781.0 Safari/535.1
 
 
 # === Key binding configuration ==============================================
@@ -219,7 +219,7 @@ set ebind     = @mode_bind global,-insert
 @cbind  b   = back
 @cbind  m   = forward
 @cbind  S   = stop
-@cbind  r   = reload
+@cbind  <F5>   = reload
 @cbind  R   = reload_ign_cache
 
 # Zoom binds
@@ -241,7 +241,7 @@ set ebind     = @mode_bind global,-insert
 @cbind  <Ctrl>p = hardcopy
 
 # Web searching binds
-@cbind  gg<Google:>_         = uri http://www.google.com/search?q=\@<encodeURIComponent(%r)>\@
+@cbind  gg<Google:>_         = event REQ_NEW_WINDOW http://www.google.com/search?q=\@<encodeURIComponent(%r)>\@
 @cbind  \\awiki<Archwiki:>_  = uri http://wiki.archlinux.org/index.php/Special:Search?search=\@<encodeURIComponent(%r)>\@&go=Go
 @cbind  \\wiki<Wikipedia:>_  = uri http://en.wikipedia.org/w/index.php?title=Special:Search&search=\@<encodeURIComponent(%r)>\@&go=Go
 
@@ -262,7 +262,7 @@ set ebind     = @mode_bind global,-insert
 # Uri opening prompts
 #@cbind  o<uri:>_       = uri %s
 @cbind  o       = spawn @scripts_dir/load_url_from_history.sh
-@cbind  t       = spawn @scripts_dir/load_url_from_history_tab.sh \@(12)\@
+@cbind  t       = spawn @scripts_dir/load_url_from_history_tab.sh
 # Or have it load the current uri into the keycmd for editing
 @cbind  O<uri:\@uri>_  = uri %s
 
@@ -281,9 +281,9 @@ set ebind     = @mode_bind global,-insert
 @cbind  zS  = event REQ_NEW_WINDOW \@(echo "$UZBL_URI" | sed -e 's/^http:/https:/')\@
 
 # Yanking & pasting binds
-@cbind  yu  = sh 'echo -n "$UZBL_URI" | xclip'
-@cbind  yU  = sh 'echo -n "$1" | xclip' '\@SELECTED_URI'
-@cbind  yy  = sh 'echo -n "$UZBL_TITLE" | xclip'
+@cbind  y  = sh 'echo -n "$UZBL_URI" | xclip -sel clip'
+#@cbind  yU  = sh 'echo -n "$1" | xclip' '\@SELECTED_URI'
+#@cbind  yy  = sh 'echo -n "$UZBL_TITLE" | xclip'
 
 # Clone current window
 @cbind  c   = event REQ_NEW_WINDOW \@uri
