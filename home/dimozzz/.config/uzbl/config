@@ -231,7 +231,7 @@ set ebind     = @mode_bind global,-insert
 @cbind  <Ctrl>f   = toggle_status
 
 # Page searching binds
-@cbind  <Ctrl>s  = search %s
+@cbind  /*  = search %s
 @cbind  ?*  = search_reverse %s
 # Jump to next and previous items
 @cbind  n   = search

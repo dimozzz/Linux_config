@@ -14,7 +14,7 @@ import XMonad.Hooks.DynamicHooks
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.SetWMName
  
-import XMonad.Layout.LayoutHints
+--import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
@@ -157,28 +157,11 @@ mySP = defaultXPConfig
     --, autoComplete      = Just 1000
     , historySize       = 1000 }
  
--- dynamicLog theme (suppress everything but layout)
-myPP = defaultPP
-    { ppLayout  = (\ x -> case x of
-      "Hinted ResizableTall"        -> "[|]"
-      "Mirror Hinted ResizableTall" -> "[-]"
-      "Hinted Tabbed Simplest"      -> "[T]"
-      "Full"                 -> "[ ]"
-      _                      -> x )
-    , ppCurrent         = const ""
-    , ppVisible         = const ""
-    , ppHidden          = const ""
-    , ppHiddenNoWindows = const ""
-    , ppUrgent          = const ""
-    , ppTitle           = const ""
-    , ppWsSep           = ""
-    , ppSep             = "" }
- 
  
 -- layouts
 myLayoutDefault = smartBorders $ toggleLayouts Full tiled
     where
-        tiled   = layoutHints $ ResizableTall nmaster delta ratio []
+        tiled   = ResizableTall nmaster delta ratio []
         nmaster = 1
         delta   = 2/100
         ratio   = 1/2
@@ -199,28 +182,28 @@ myManageHook = composeAll
     , className =? "Pidgin"                 --> doF (W.shift "Pidgin! (Achtung)")
     , className =? "java-lang-Thread"       --> doF (W.shift "Idea")
     , className =? "com-sun-javaws-Main"    --> doF (W.shift "Arena")
+	--, title =? "ncmpc++"                    --> doF (W.shift "Music")
     , isFullscreen                          --> doFullFloat
     , manageDocks
     --, scratchpadManageHook scratchpad
     ] <+> scratchpadManageHook (W.RationalRect 0 0 1 0.3)
       <+> manageHook defaultConfig 
 
-myLogHook = dynamicLogWithPP xmobarPP
+myLogHook = dynamicLogWithPP xmobarPP 
 
 myStartupHook :: X ()
 myStartupHook = do
     setWMName "LG3D"
     spawn "feh --bg-scale ~/trash/pics/wallpaper/Bliss.jpg &"
     spawn "emacs --daemon &"
-    --spawn "claws-mail &"
     spawn "pidgin &"
     spawn "uzbl-tabbed &"
+    --spawn "urxvt -e ncmpcpp&"
     refresh
 
 main = do
-
     xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig {
-		terminal           = "urxvt -sh 15 -b 0"
+		terminal           = "urxvt -sh 15"
         , borderWidth        = 2
         , normalBorderColor  = "black"
         , focusedBorderColor = "orange"
