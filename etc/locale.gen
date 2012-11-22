@@ -358,9 +358,9 @@ en_US ISO-8859-1
 #pt_PT@euro ISO-8859-15  
 #ro_RO.UTF-8 UTF-8  
 #ro_RO ISO-8859-2  
-#ru_RU.KOI8-R KOI8-R  
-#ru_RU.UTF-8 UTF-8  
-#ru_RU ISO-8859-5  
+ru_RU.KOI8-R KOI8-R  
+ru_RU.UTF-8 UTF-8  
+ru_RU ISO-8859-5  
 #ru_UA.UTF-8 UTF-8  
 #ru_UA KOI8-U  
 #rw_RW UTF-8  
