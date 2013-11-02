@@ -4,7 +4,7 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , position = Bottom
        , lowerOnStart = True
 	   , commands = [  Run StdinReader
-					, Run Com "/ust/bin/zsh" ["-c", "~/.myScripts/check_mail.sh"] "check_mail" 1200
+					, Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/check_mail.sh"] "check_mail" 1200
                     ]
        , sepChar = "%"
        , alignSep = "}{"
