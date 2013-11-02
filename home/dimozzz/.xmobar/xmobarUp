@@ -6,7 +6,7 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , commands = [ Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
                     , Run Network "eth1" ["-L","0","-H","32","--normal","green","--high","red"] 10
                     , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
-					, Run Com "/bin/sh" ["~/.myScripts/xmobarMpd.sh"] "mpd" 5
+					, Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/xmobarMpd.sh"] "mpd" 5
                     , Run Memory ["-t","Mem: <used>"] 10
                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     ]
