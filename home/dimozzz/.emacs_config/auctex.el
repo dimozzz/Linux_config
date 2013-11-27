@@ -6,8 +6,8 @@
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
 
-(setq LaTeX-indent-level 4)
-(setq LaTeX-item-indent 4)
+(setq-default LaTeX-indent-level 4)
+(setq-default LaTeX-item-indent 4)
 (setq TeX-newline-function 'newline-and-indent)
 
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
