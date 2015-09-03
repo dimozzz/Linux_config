@@ -3,8 +3,14 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , fgColor = "grey"
        , position = Top
        , lowerOnStart = True
-       , commands = [ Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
-                    , Run Network "eth1" ["-L","0","-H","32","--normal","green","--high","red"] 10
+       , commands = [
+					Run DynNetwork [ "--template" , "<dev>: <rx>kB/s| <tx>kB/s"
+					                 , "--Low"      , "1000"       -- units: kB/s
+								     , "--High"     , "5000"       -- units: kB/s
+								     , "--low"      , "darkgreen"
+								     , "--normal"   , "darkorange"
+								     , "--high"     , "darkred"] 10
+                    , Run Network "enp6s1" ["-L","0","-H","32","--normal","green","--high","red"] 10
                     , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
 					, Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/xmobarMpd.sh"] "mpd" 5
                     , Run Memory ["-t","Mem: <used>"] 10
@@ -12,7 +18,7 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%cpu% | %memory% | %eth0% - %eth1%}%mpd%{<fc=#ee9a00>%date%</fc>"
+       , template = "%cpu% | %memory% | %dynnetwork%}%mpd%{<fc=#ee9a00>%date%</fc>"
        }
 
  
