@@ -5,12 +5,11 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , lowerOnStart = True
        , commands = [
 					Run DynNetwork [ "--template" , "<dev>: <rx>kB/s| <tx>kB/s"
-					                 , "--Low"      , "1000"       -- units: kB/s
-								     , "--High"     , "5000"       -- units: kB/s
+					                 , "--Low"      , "100000"       -- units: kB/s
+								     , "--High"     , "200000"       -- units: kB/s
 								     , "--low"      , "darkgreen"
 								     , "--normal"   , "darkorange"
 								     , "--high"     , "darkred"] 10
-                    , Run Network "enp6s1" ["-L","0","-H","32","--normal","green","--high","red"] 10
                     , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
 					, Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/xmobarMpd.sh"] "mpd" 5
                     , Run Memory ["-t","Mem: <used>"] 10
