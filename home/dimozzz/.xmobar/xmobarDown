@@ -1,12 +1,14 @@
-Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
-       , bgColor = "black"
-       , fgColor = "grey"
-       , position = Bottom
-       , lowerOnStart = True
-	   , commands = [  Run StdinReader
-					, Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/check_mail.sh"] "check_mail" 1200
-                    ]
-       , sepChar = "%"
-       , alignSep = "}{"
-       , template = "%StdinReader%}{Unread mail: %check_mail%  "
-       }
+Config {
+    font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*",
+    bgColor = "black",
+    fgColor = "grey",
+    position = Bottom,
+    lowerOnStart = True,
+    sepChar = "%",
+    alignSep = "}{",
+    commands = [
+        Run StdinReader,
+		Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/vol.sh"] "volume" 5,
+        Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/check_mail.sh"] "check_mail" 600],
+    template = "%StdinReader%}Volume: %volume%{Unread mail: %check_mail%  "
+}

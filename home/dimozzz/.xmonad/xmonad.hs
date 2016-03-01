@@ -1,4 +1,4 @@
-import XMonad hiding ( (|||) )
+import XMonad hiding ((|||))
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import Data.Ratio ((%))
@@ -30,9 +30,132 @@ import XMonad.Prompt
 import XMonad.Prompt.Input
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Window
-import System.IO.UTF8
+import System.IO
 
 import XMonad.Util.Scratchpad 
+import XMonad.Util.Run(spawnPipe)
+
+
+main = do
+    top <- spawnPipe "xmobar ~/.xmobar/xmobarUp"
+    down <- spawnPipe "xmobar ~/.xmobar/xmobarDown"
+	
+    xmonad $ withUrgencyHook NoUrgencyHook $ ewmh def {
+        terminal           = "urxvt -sh 15"
+        , borderWidth        = 2
+        , normalBorderColor  = "black"
+        , focusedBorderColor = "orange"
+        , focusFollowsMouse  = True
+        , modMask            = mod4Mask
+        , keys               = myKeys
+        , mouseBindings      = myMouseBindings
+        , layoutHook         = myLayout
+        , workspaces         = myWorkspaces
+        , manageHook         = myManageHook
+        , startupHook        = myStartupHook
+        , logHook            = myLogHook down
+		, handleEventHook    = docksEventHook <+> handleEventHook def
+    }
+
+-- layouts
+myLayoutDefault = smartBorders $ toggleLayouts Full tiled
+    where
+        tiled   = ResizableTall nmaster delta ratio []
+        nmaster = 1
+        delta   = 2/100
+        ratio   = 1/2
+
+
+myLayout = avoidStruts $ onWorkspace "Message" myLIm $ myLayoutDefault
+    where
+	    myLIm = (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") (toggleLayouts Circle Grid))
+
+myLogHook bar = dynamicLogWithPP xmobarPP {
+    ppOutput = hPutStrLn bar
+}
+
+-- special windows
+myManageHook = composeAll
+    [ className =? "MPlayer"                --> doFloat
+    , className =? "Firefox"                --> doF (W.shift "Web")
+    , className =? "Pidgin"                 --> doF (W.shift "Pidgin!")
+    , className =? "java-lang-Thread"       --> doF (W.shift "Idea")
+    , className =? "com-sun-javaws-Main"    --> doF (W.shift "Arena")
+    --, title =? "ncmpc++"                    --> doF (W.shift "Music")
+    , isFullscreen                          --> doFullFloat
+    , manageDocks
+    --, scratchpadManageHook scratchpad
+    ] <+> scratchpadManageHook (W.RationalRect 0 0 1 0.3)
+      <+> manageDocks
+      <+> manageHook def
+
+
+myStartupHook :: X ()
+myStartupHook = do
+    setWMName "LG3D"
+    spawn "feh --bg-scale ~/trash/pics/wallpaper/lofotenskie-ostrova-norvegiya.jpg &"
+    spawn "emacs --daemon &"
+    --spawn "pidgin &"
+    spawn "firefox &"
+    --spawn "urxvt -e ncmpcpp&"
+    refresh
+
+
+
+
+myNamedWorkSpaces = ["Web","Message","Music","8","9"]
+myWorkspaces = map show [1..4] ++ myNamedWorkSpaces
+ 
+myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
+    -- mod-button1, Set the window to floating mode and move by dragging
+    [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
+    -- mod-button2, Raise the window to the top of the stack
+    , ((modMask, button2), (\w -> focus w >> windows W.swapMaster))
+    -- mod-button3, Set the window to floating mode and resize by dragging
+    , ((modMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w)) ]
+ 
+-- decoration theme
+myDeco = def
+    { activeColor         = "orange"
+    , inactiveColor       = "#222222"
+    , urgentColor         = "yellow"
+    , activeBorderColor   = "orange"
+    , inactiveBorderColor = "#222222"
+    , urgentBorderColor   = "yellow"
+    , activeTextColor     = "orange"
+    , inactiveTextColor   = "#222222"
+    , urgentTextColor     = "yellow"
+    , decoHeight          = 10 }
+ 
+-- tab theme
+myTab = def
+    { activeColor         = "black"
+    , inactiveColor       = "black"
+    , urgentColor         = "yellow"
+    , activeBorderColor   = "orange"
+    , inactiveBorderColor = "#222222"
+    , urgentBorderColor   = "black"
+    , activeTextColor     = "orange"
+    , inactiveTextColor   = "#222222"
+    , urgentTextColor     = "yellow" }
+ 
+-- shell prompt theme
+mySP = def
+    { bgColor           = "black"
+    , fgColor           = "white"
+    , bgHLight          = "gray"
+    , fgHLight          = "black"
+    , borderColor       = "orange"
+    , promptBorderWidth = 1
+    , position          = Bottom
+    , height            = 20
+    --, autoComplete      = Just 1000
+    , historySize       = 1000 }
+ 
+ 
+
+
+
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
@@ -81,14 +204,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
     -- toggle focused window fullscreen
     , ((modMask, xK_m), sendMessage (Toggle "Full"))
-	, ((modMask, xK_c), sendMessage (Toggle "Circle"))
+    , ((modMask, xK_c), sendMessage (Toggle "Circle"))
  
     -- toggle the status bar gap
     , ((modMask, xK_f), sendMessage ToggleStruts)
  
     -- close focused window
     , ((mod1Mask, xK_F4), kill)
-	
+    
     -- Volume control
     , ((controlMask .|. shiftMask, xK_Left), spawn "amixer sset Master 2-")
     , ((controlMask .|. shiftMask, xK_Right), spawn "amixer sset Master 2+")
@@ -106,116 +229,3 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     [ ((m .|. modMask, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)] ]
- 
-
-myNamedWorkSpaces = ["Web","Pidgin! (Achtung)","Music","Idea","Arena"]
-myWorkspaces = map show [1..4] ++ myNamedWorkSpaces
- 
-myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
-    -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modMask, button1), (\w -> focus w >> mouseMoveWindow w))
-    -- mod-button2, Raise the window to the top of the stack
-    , ((modMask, button2), (\w -> focus w >> windows W.swapMaster))
-    -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((modMask, button3), (\w -> focus w >> Flex.mouseResizeWindow w)) ]
- 
--- decoration theme
-myDeco = defaultTheme
-    { activeColor         = "orange"
-    , inactiveColor       = "#222222"
-    , urgentColor         = "yellow"
-    , activeBorderColor   = "orange"
-    , inactiveBorderColor = "#222222"
-    , urgentBorderColor   = "yellow"
-    , activeTextColor     = "orange"
-    , inactiveTextColor   = "#222222"
-    , urgentTextColor     = "yellow"
-    , decoHeight          = 10 }
- 
--- tab theme
-myTab = defaultTheme
-    { activeColor         = "black"
-    , inactiveColor       = "black"
-    , urgentColor         = "yellow"
-    , activeBorderColor   = "orange"
-    , inactiveBorderColor = "#222222"
-    , urgentBorderColor   = "black"
-    , activeTextColor     = "orange"
-    , inactiveTextColor   = "#222222"
-    , urgentTextColor     = "yellow" }
- 
--- shell prompt theme
-mySP = defaultXPConfig
-    { bgColor           = "black"
-    , fgColor           = "white"
-    , bgHLight          = "gray"
-    , fgHLight          = "black"
-    , borderColor       = "orange"
-    , promptBorderWidth = 1
-    , position          = Bottom
-    , height            = 20
-    --, autoComplete      = Just 1000
-    , historySize       = 1000 }
- 
- 
--- layouts
-myLayoutDefault = smartBorders $ toggleLayouts Full tiled
-    where
-        tiled   = ResizableTall nmaster delta ratio []
-        nmaster = 1
-        delta   = 2/100
-        ratio   = 1/2
-
-
-myLIm = (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") (toggleLayouts Circle Grid))
---avoidStruts (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") Grid)
-
-myLayout = avoidStruts $ onWorkspace "Pidgin! (Achtung)" myLIm $
-           myLayoutDefault
-
-
-
--- special windows
-myManageHook = composeAll
-    [ className =? "MPlayer"                --> doFloat
-    , className =? "Uzbl-tabbed"            --> doF (W.shift "Web")
-    , className =? "Pidgin"                 --> doF (W.shift "Pidgin! (Achtung)")
-    , className =? "java-lang-Thread"       --> doF (W.shift "Idea")
-    , className =? "com-sun-javaws-Main"    --> doF (W.shift "Arena")
-	--, title =? "ncmpc++"                    --> doF (W.shift "Music")
-    , isFullscreen                          --> doFullFloat
-    , manageDocks
-    --, scratchpadManageHook scratchpad
-    ] <+> scratchpadManageHook (W.RationalRect 0 0 1 0.3)
-      <+> manageHook defaultConfig 
-
-myLogHook = dynamicLogWithPP xmobarPP 
-
-myStartupHook :: X ()
-myStartupHook = do
-    setWMName "LG3D"
-    spawn "feh --bg-scale ~/trash/pics/wallpaper/Bliss.jpg &"
-    spawn "emacs --daemon &"
-    spawn "pidgin &"
-    spawn "uzbl-tabbed &"
-    --spawn "urxvt -e ncmpcpp&"
-    refresh
-
-main = do
-    xmonad $ withUrgencyHook NoUrgencyHook $ defaultConfig {
-		terminal           = "urxvt -sh 15"
-        , borderWidth        = 2
-        , normalBorderColor  = "black"
-        , focusedBorderColor = "orange"
-        , focusFollowsMouse  = True
-        , modMask            = mod4Mask
-        , keys               = myKeys
-        , mouseBindings      = myMouseBindings
-        , layoutHook         = myLayout
-        , handleEventHook    = ewmhDesktopsEventHook
-		, workspaces         = myWorkspaces
-        , manageHook         = myManageHook
-		, startupHook        = myStartupHook
-		, logHook            = myLogHook
-
-    }
