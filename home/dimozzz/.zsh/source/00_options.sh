@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+unset mailpath MAILCHECK
+
+setopt APPEND_HISTORY
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+setopt EXTENDED_GLOB
+setopt NOMATCH
+setopt NOTIFY
