@@ -1,10 +1,8 @@
-#URxvt*perl-ext: tabbed
 URxvt.tabbed.tab-bg: 4
 
-URxvt.font: xft:Monospace:style=Regular:size=11
-URxvt.boldFont: xft:Monospace:style=Regular:size=11
-#URxvt.font: xft:Terminus:style=Regular:size=14
-#URxvt.boldFont: xft:Terminus:style=Regular:size=14
+#URxvt.font: xft:Monospace:style=Regular:size=11
+URxvt*font:     xft:DejaVu Sans Mono:size=11
+URxvt.boldFont: xft:DejaVu Sans Mono:style=Regular:size=11
 
 URxvt*foreground: #C0C0C0
 URxvt*background: Black

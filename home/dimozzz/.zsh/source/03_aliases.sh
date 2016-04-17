@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-alias ls='ls --color=auto -GF'
+alias ls='ls --color=auto -GF --quoting-style=literal'
 alias ps='ps -e'
 alias pause='mpc pause'
 alias play='mpc play'
