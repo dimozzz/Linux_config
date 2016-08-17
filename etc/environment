@@ -6,3 +6,6 @@ MPD_PORT=6600
 XMODIFIERS=@im=SCIM
 GTK_IM_MODULE=xim
 QT_IM_MODULE=xim
+BROWSER="firefox"
+
+TEXINPUTS=.:/home/dimozzz/work/styles_tex/physsummer_style/:
