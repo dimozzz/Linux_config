@@ -15,3 +15,4 @@ URxvt*sсrollBar_right: True
 URxvt*saveLines: 512
 
 Emacs*useXIM:false
+emacs.font: DejaVu Sans Mono-12
