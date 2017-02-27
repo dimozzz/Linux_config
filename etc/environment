@@ -8,4 +8,4 @@ GTK_IM_MODULE=xim
 QT_IM_MODULE=xim
 BROWSER="firefox"
 
-TEXINPUTS=.:/home/dimozzz/work/styles_tex/physsummer_style//:
+TEXINPUTS=.:/home/dimozzz/work/styles_tex/physsummer_style//:/home/dimozzz/work/styles_tex/mathseries_style//:/home/dimozzz/work/styles_tex/slides_style//:
