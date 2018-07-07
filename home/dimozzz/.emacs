@@ -1,5 +1,4 @@
-(load "~/.emacs\_config/auctex.el")
-;(load "~/.emacs_config/smart-tabs")
+(load "~/.emacs_config/auctex.el")
 (set-language-environment 'UTF-8)
 (setq default-input-method 'russian-computer)
 (global-set-key [f13] 'toggle-input-method)
@@ -14,13 +13,15 @@
 
 ;; Set the tab width
 (setq default-tab-width 4)
+(setq-default tab-width 4)
 (setq tab-width 4)
+(setq-default c-basic-indent 4)
 (setq c-basic-indent 4)
 
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-linum-mode t)
 
-(setq-default fill-column 85)
+(setq-default fill-column 105)
 
 (setq make-backup-files nil)
 (setq auto-save-default nil)

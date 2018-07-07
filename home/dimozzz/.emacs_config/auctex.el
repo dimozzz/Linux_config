@@ -3,15 +3,17 @@
 
 
 (setq TeX-parse-self t)
-(setq TeX-auto-save t)
+(setq TeX-auto-save nil)
 
 
 (define-key LaTeX-mode-map [remap fill-region] 'LaTeX-fill-region)
 (define-key LaTeX-mode-map [remap fill-paragraph] 'LaTeX-fill-paragraph)
 
 
+(setq-default TeX-brace-indent-level 4)
 (setq-default LaTeX-indent-level 4)
 (setq LaTeX-item-indent 0)
+
 
 
 (setq TeX-newline-function 'newline-and-indent)
@@ -40,8 +42,6 @@
 (add-hook 'LaTeX-mode-hook 'latex-auto-fill-everywhere)
 
 
-
-;;; Taken from http://emacs.stackexchange.com/questions/3083/how-to-indent-items-in-latex-auctex-itemize-environments
 (defun LaTeX-indent-item ()
   (save-match-data
     (let* ((offset LaTeX-indent-level)
@@ -50,7 +50,7 @@
                        (* 2 LaTeX-indent-level)))
            (re-beg "\\\\begin{")
            (re-end "\\\\end{")
-           (re-env "\\(itemize\\|\\enumerate\\|description\\)")
+           (re-env "\\(itemize\\|\\enumerate\\|\\enumtask\\|\\itemtask\\|\\enumcyr\\|description\\)")
            (indent (save-excursion
                      (when (looking-at (concat re-beg re-env "}"))
                        (end-of-line))
@@ -82,5 +82,8 @@
   '(setq LaTeX-indent-environment-list
          (nconc '(("itemize" LaTeX-indent-item)
                   ("enumerate" LaTeX-indent-item)
+		  ("enumcyr" LaTeX-indent-item)
+		  ("enumtask" LaTeX-indent-item)
+		  ("itemtask" LaTeX-indent-item)
                   ("description" LaTeX-indent-item))
                 LaTeX-indent-environment-list)))
