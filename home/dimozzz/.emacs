@@ -4,11 +4,12 @@
 (global-set-key [f13] 'toggle-input-method)
 
 ;; Turn on tabs
-(setq indent-tabs-mode t)
-(setq-default indent-tabs-mode t)
+(setq indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 
 ;; Bind the TAB key 
-(global-set-key (kbd "TAB") 'self-insert-command)
+;(global-set-key (kbd "TAB") 'self-insert-command)
+(global-set-key (kbd "TAB") 'tab-to-tab-stop)
 
 
 ;; Set the tab width
