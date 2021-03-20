@@ -1,23 +1,26 @@
-Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
-       , bgColor = "black"
-       , fgColor = "grey"
-       , position = Top
-       , lowerOnStart = True
-       , commands = [
-					Run DynNetwork [ "--template" , "<dev>: <rx>kB/s| <tx>kB/s"
-					                 , "--Low"      , "100000"       -- units: kB/s
-								     , "--High"     , "200000"       -- units: kB/s
-								     , "--low"      , "darkgreen"
-								     , "--normal"   , "darkorange"
-								     , "--high"     , "darkred"] 10
-                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
-					, Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/xmobarMpd.sh"] "mpd" 5
-                    , Run Memory ["-t","Mem: <used>"] 10
-                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
-                    ]
-       , sepChar = "%"
-       , alignSep = "}{"
-       , template = "%cpu% | %memory% | %dynnetwork%}%mpd%{<fc=#ee9a00>%date%</fc>"
-       }
-
- 
+Config{
+    font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true",
+    bgColor = "black",
+    fgColor = "grey",
+    position = Top,
+    lowerOnStart = True,
+    commands = [
+        Run DynNetwork [
+            "--template" , "<dev>: <rx>kB/s| <tx>kB/s",
+			"--Low"      , "100000"       -- units: kB/s
+            ,
+			"--High"     , "200000"       -- units: kB/s
+            ,
+            "--low"      , "darkgreen",
+            "--normal"   , "darkorange",
+            "--high"     , "darkred"
+        ] 10,
+        Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10,
+        Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/xmobarMpd.sh"] "mpd" 5,
+        Run Memory ["-t","Mem: <used>"] 10,
+        Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+    ],
+    sepChar = "%",
+    alignSep = "}{",
+    template = "%cpu% | %memory% | %dynnetwork%}%mpd%{<fc=#ee9a00>%date%</fc>"
+}

@@ -1,5 +1,5 @@
 Config {
-    font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*",
+    font =  "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true",
     bgColor = "black",
     fgColor = "grey",
     position = Bottom,
@@ -10,5 +10,5 @@ Config {
         Run StdinReader,
 		Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/vol.sh"] "volume" 5,
         Run Com "/usr/bin/zsh" ["-c", "~/.myScripts/check_mail.sh"] "check_mail" 600],
-    template = "%StdinReader%}Volume: %volume%{Unread mail: %check_mail%  "
+    template = "%StdinReader%}Volume: %volume%{"
 }
