@@ -13,7 +13,6 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ToggleLayouts
-import XMonad.Layout.IM
 import XMonad.Layout.Grid
 import XMonad.Layout.Circle
 import XMonad.Layout.PerWorkspace
@@ -34,7 +33,7 @@ main = do
     top <- spawnPipe "xmobar ~/.xmobar/xmobarUp"
     down <- spawnPipe "xmobar ~/.xmobar/xmobarDown"
 
-    xmonad $ withUrgencyHook NoUrgencyHook $ ewmh def {
+    xmonad $ docks $ ewmh $ ewmhFullscreen $ def {
         terminal           = "urxvt -sh 15",
         borderWidth        = 2,
         normalBorderColor  = "black",
@@ -42,26 +41,22 @@ main = do
         focusFollowsMouse  = True,
         modMask            = mod4Mask,
         keys               = myKeys,
+--        handleEventHook    = fullscreenEventHook, 
         mouseBindings      = myMouseBindings,
         layoutHook         = myLayout,
         workspaces         = myWorkspaces,
         manageHook         = myManageHook,
         startupHook        = myStartupHook,
-        logHook            = myLogHook down,
-        handleEventHook    = docksEventHook <+> handleEventHook def
+        logHook            = myLogHook down
     }
 
-myLayoutDefault = smartBorders $ toggleLayouts Full tiled
+myLayout = avoidStruts $ smartBorders $ toggleLayouts Full tiled
     where
         tiled   = ResizableTall nmaster delta ratio []
         nmaster = 1
         delta   = 2/100
         ratio   = 1/2
 
-
-myLayout = avoidStruts $ onWorkspace "Message" myLIm $ myLayoutDefault
-    where
-        myLIm = (withIM (1%4) (ClassName "Pidgin" `And` Role "buddy_list") (toggleLayouts Circle Grid))
 
 
 myLogHook bar = dynamicLogWithPP xmobarPP {

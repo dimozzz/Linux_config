@@ -37,8 +37,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $ [
     -- cycle through workspaces
     ((modMask .|. controlMask, xK_Right ), moveTo Next (WSIs (return $ not . (=="SP") . W.tag))),
     ((modMask .|. controlMask, xK_Left),   moveTo Prev (WSIs (return $ not . (=="SP") . W.tag))),
-    ((modMask .|. controlMask, xK_Up),     moveTo Next EmptyWS),
-    ((modMask .|. controlMask, xK_Down),   moveTo Prev EmptyWS),
+    ((modMask .|. controlMask, xK_Up),     moveTo Next emptyWS),
+    ((modMask .|. controlMask, xK_Down),   moveTo Prev emptyWS),
      
     -- move windows through workspaces
     ((modMask .|. shiftMask, xK_Right ), shiftTo Next (WSIs (return $ not . (=="SP") . W.tag))),
@@ -77,8 +77,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $ [
     ((mod1Mask, xK_F4), kill),
     
     -- Volume control
-    ((controlMask .|. shiftMask, xK_Left), spawn "amixer sset Master 2-"),
-    ((controlMask .|. shiftMask, xK_Right), spawn "amixer sset Master 2+"),
+    ((controlMask .|. shiftMask, xK_Left), spawn "amixer -D pulse sset Master 2%-"),
+    ((controlMask .|. shiftMask, xK_Right), spawn "amixer -D pulse sset Master 2%+"),
     ((controlMask .|. shiftMask, xK_Up), spawn "mpc seek +5"),
     ((controlMask .|. shiftMask, xK_Down), spawn "mpc seek -5"),
     ((controlMask .|. shiftMask, xK_space), spawn "mpc toggle")
