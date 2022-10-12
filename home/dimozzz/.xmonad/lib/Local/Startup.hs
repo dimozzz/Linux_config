@@ -9,4 +9,5 @@ myStartupHook = do
     setWMName "LG3D"
     spawn "feh --bg-scale ~/work/wp.jpg &"
     spawn "emacs --daemon &"
+    spawn "fcitx5 &"
     refresh

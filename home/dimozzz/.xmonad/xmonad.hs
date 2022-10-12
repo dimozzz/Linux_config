@@ -24,6 +24,7 @@ import System.IO
 import XMonad.Util.Run(spawnPipe)
 
 import Local.Startup
+import Local.Terminal
 import Local.Keys
 import Local.Colors
 import Local.SpecialWindows
@@ -34,7 +35,7 @@ main = do
     down <- spawnPipe "xmobar ~/.xmobar/xmobarDown"
 
     xmonad $ docks $ ewmh $ ewmhFullscreen $ def {
-        terminal           = "urxvt -sh 15",
+        terminal           = myTerminal    ,
         borderWidth        = 2,
         normalBorderColor  = "black",
         focusedBorderColor = "orange",

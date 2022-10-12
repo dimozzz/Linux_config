@@ -16,16 +16,17 @@ import XMonad.Prompt.Input
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Window
 
-import XMonad.Util.Scratchpad 
+import XMonad.Util.NamedScratchpad 
 import XMonad.Util.Run(spawnPipe)
 
+import Local.Terminal
 import Local.Prompt
 
 
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $ [
     ((modMask, xK_Home), spawn $ XMonad.terminal conf),
-    ((modMask, xK_Down), scratchpadSpawnAction conf),
+    ((modMask, xK_Down), namedScratchpadAction myScratchPads "terminal"),
  
     -- shell/window prompts
     ((modMask, xK_space), shellPrompt mySP),
