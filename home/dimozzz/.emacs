@@ -23,7 +23,7 @@
 (setq c-basic-indent 4)
 
 (global-set-key (kbd "RET") 'newline-and-indent)
-(global-linum-mode t)
+(global-display-line-numbers-mode)
 
 (setq-default fill-column 105)
 
