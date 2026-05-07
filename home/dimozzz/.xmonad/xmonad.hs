@@ -14,7 +14,7 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.Grid
-import XMonad.Layout.Circle
+import XMonad.Layout.CircleEx
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.LayoutCombinators
  
